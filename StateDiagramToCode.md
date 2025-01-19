@@ -1,38 +1,35 @@
-> [!NOTE]
-> This article demonstrates how to model complex logic using a Mermaid state diagram and leverage a
-> Large Language Model (LLM) to generate Android Kotlin code based on the diagram. The generated
-> code incorporates modern development practices, including Kotlin Coroutines for asynchronous
-> operations and Dependency Injection for managing dependencies effectively.
+> [!NOTE]  
+> This article demonstrates how to model complex logic using a `Mermaid state diagram` and leverage
+> a `Large Language Model (LLM)` to generate `Android Kotlin` code based on the diagram. The generated
+> code incorporates modern development practices, including `Kotlin Coroutines` for asynchronous
+> operations and `Dependency Injection` for managing dependencies effectively.
 >
-> Additionally, the article explores how LLMs can be used to generate unit test code to validate the
-> functionality of the generated code.
->
-> By providing clear instructions and refining prompts, developers can produce robust functional and
-> test code, streamlining the workflow from design to implementation and testing. This approach
-> highlights the power of LLMs in bridging design and development while ensuring high-quality,
-> maintainable code.
+> Additionally, the article explores how `LLMs` can be used to generate unit test code to validate
+> the functionality of the generated code.
 
 # State Diagram
 
-A state diagram is particularly effective at modeling the dynamic behavior of a system by
-representing its states, transitions, and events. It is ideal for visualizing how a system or
-component responds to external inputs, progresses through different states, and enforces rules or
-constraints on transitions. State diagrams are commonly used in software design for systems with
-well-defined states, such as user interfaces, workflows, communication protocols, or event-driven
-applications. They help clarify complex behaviors, identify edge cases, and ensure a shared
-understanding among developers, making them invaluable for designing and validating systems with
-state-dependent logic.
+A `state diagram` is particularly effective at modeling the dynamic behavior of a system by
+representing its `states`, `transitions`, and `events`. It is ideal for visualizing how a system or
+component responds to external inputs, progresses through different `states`, and enforces rules or
+constraints on `transitions`. `State diagrams` are commonly used in software design for systems with
+well-defined `states`, such as user interfaces, workflows, communication protocols, or
+event-driven applications. They help clarify complex behaviors, identify edge cases, and ensure a
+shared understanding among developers, making them invaluable for designing and validating systems
+with `state-dependent logic`.
 
 ## Mermaid State Diagram
 
-Mermaid state diagrams are a versatile tool for visualizing state-based behavior in a way that is
-both human-readable and easily editable. Written in a simple text-based syntax, they allow
+`Mermaid state diagrams` are a versatile tool for visualizing state-based behavior in a way that
+is both human-readable and easily editable. Written in a simple text-based syntax, they allow
 developers and designers to create and modify diagrams without requiring specialized software,
 making them highly accessible. These diagrams can be integrated and displayed in various
-environments, including Markdown files, wikis, and documentation tools, ensuring broad compatibility
-and ease of sharing. This flexibility makes Mermaid an excellent choice for collaborative projects,
-enabling teams to document and communicate state transitions clearly and efficiently while keeping
-the workflow lightweight and adaptable.
+environments, including `Markdown` files, `wikis`, and documentation tools, ensuring broad
+compatibility and ease of sharing. This flexibility makes `Mermaid` an excellent choice for
+collaborative projects, enabling teams to document and communicate state transitions clearly and
+efficiently while keeping the workflow lightweight and adaptable.
+
+[Mermaid State Diagram Docs](https://mermaid.js.org/syntax/stateDiagram.html)
 
 ### The Raw Code of the Mermaid State Diagram
 
@@ -75,26 +72,39 @@ properly in some browser:
 
 ![state_diagram](diagrams/state_diagram.png)
 
-I created this Mermaid state diagram to model a repository's behavior for demonstration purposes,
-illustrating the flow of data handling and transitions between states. It captures key scenarios
-such as checking for cached data, fetching updates from the network, handling errors, and updating
-the cache. The diagram highlights how the repository reacts to events like cache expiration, network
-failures, and user-triggered actions, making it a useful tool for visualizing the repository's logic
-and ensuring that edge cases, like error fallback or retry mechanisms, are accounted for in the
-design.
+I created this `Mermaid state diagram` to model a repository's behavior for demonstration
+purposes, illustrating the flow of data handling and transitions between states. It captures key
+scenarios such as checking for cached data, fetching updates from the network, handling errors, and
+updating the cache. The diagram highlights how the repository reacts to events like cache
+expiration, network failures, and user-triggered actions, making it a useful tool for visualizing
+the repository's logic and ensuring that edge cases, like error fallback or retry mechanisms, are
+accounted for in the design.
 
 # Convert the State Diagram into Kotlin Code
 
-I explored using a Large Language Model (LLM) to convert a Mermaid State Diagram into Kotlin code
-and found it to perform remarkably well. The process was efficient, with the LLM accurately
+I explored using a `Large Language Model (LLM)` to convert a `Mermaid State Diagram` into `Kotlin`
+code and found it to perform remarkably well. The process was efficient, with the `LLM` accurately
 interpreting the states, transitions, and overall logic represented in the diagram. It was able to
-generate Kotlin code that adhered to best practices, including the use of coroutines, dependency
+generate `Kotlin` code that adhered to best practices, including the use of coroutines, dependency
 injection, and proper error handling. The resulting code was both clean and aligned with the
-original intent of the state diagram, demonstrating how LLMs can effectively bridge the gap between
-design visualization and implementation in software development.
+original intent of the `Mermaid State Diagram`, demonstrating how `LLMs` can effectively bridge the
+gap between design visualization and implementation in software development.
 
 ## The Prompt I Used
 
+> stateDiagram-v2
+> [*] --> CheckCache: On first launch or reset
+> CheckCache --> UsingCache: Found valid cache
+> CheckCache --> FetchingFromNetwork: No valid cache or forced refresh
+> UsingCache --> StaleCache: Data marked stale (TTL expired, etc.)
+> StaleCache --> FetchingFromNetwork: Triggered by UseCase or UI request
+> FetchingFromNetwork --> CacheUpdated: Network request successful
+> FetchingFromNetwork --> Error: Network request failed
+> CacheUpdated --> UsingCache: Cache is now valid
+> Error --> FetchingFromNetwork: Try again (if allowed)
+> Error --> UsingCache: Fallback to cached data (if allowed)
+> Error --> TerminalError: (if retry and fallback not allowed)
+> --
 > Convert this state diagram into a `DataRepository` class in Kotlin. Inject the dependencies
 > `DataCache`, `NetworkDataSource`, and `CoroutineDispatcher` using Dagger/Hilt. Use Kotlin
 > Coroutines `suspend` functions for I/O operations. Define a `canRetry(retriedTimes)` function in
@@ -216,30 +226,31 @@ class DataRepository @Inject constructor(
 }
 ```
 
-ChatGPT's o1 model demonstrates notable strength in performing complex tasks when compared to other
-models like GPT-4o. The o1 model excels in understanding nuanced prompts, managing intricate
-workflows, and generating coherent, contextually accurate responses. Its optimization for
+ChatGPT's `o1 model` demonstrates notable strength in performing complex tasks when compared to
+other models like `GPT-4o`. The `o1 model` excels in understanding nuanced prompts, managing
+intricate workflows, and generating coherent, contextually accurate responses. Its optimization for
 task-oriented scenarios allows it to handle challenges requiring deep reasoning or technical
-accuracy with higher consistency and speed. While GPT-4o is robust in general conversational
-abilities, the o1 model is specifically designed to shine in domains where precision and structure
-are critical, such as coding, advanced problem-solving, or detailed analysis. This tailored focus
-makes the O1 model a powerful tool for users tackling multifaceted projects.
+accuracy with higher consistency and speed. While `GPT-4o` is robust in general conversational
+abilities, the `o1 model` is specifically designed to shine in domains where precision and structure
+are critical, such as coding, advanced problem-solving, or detailed analysis. This tailored
+focus makes the `o1 model` a powerful tool for users tackling multifaceted projects.
 
 The prompt and code generated above do not specify the use of any particular state modeling
-architecture, such as representing states with enums or interfaces/classes to formalize state
+architecture, such as representing states with `enums` or `interfaces/classes` to formalize state
 handling. This approach provides flexibility but may lack the structure offered by formal state
-representations. I also refined the prompt to include explicit requirements for using enums or
-sealed interfaces/classes to model states. The o1 model successfully understood and followed these
-additional instructions, generating code that adhered to the specified architectural guidelines. I
-will demonstrate these more advanced state modeling techniques in a separate article.
+representations. I also refined the prompt to include explicit requirements for using `enums` or
+sealed `interfaces/classes` to model states. The `o1 model` successfully understood and followed
+these additional instructions, generating code that adhered to the specified architectural
+guidelines. I will demonstrate these more advanced state modeling techniques in a separate article.
 
 # Generating Unit Tests
 
-We can also leverage LLMs to generate unit tests for the code they produce, streamlining the testing
-process. By providing specific instructions about the functions to be tested, as well as the Android
-or Kotlin unit testing libraries permitted—such as JUnit, Mockito, or Kotlin Coroutines Test—we can
-guide the model to create precise, contextually relevant test cases. The LLM can handle various
-scenarios, including edge cases, success paths, and error conditions, ensuring robust test coverage.
+We can also leverage `LLMs` to generate unit tests for the code they produce, streamlining the
+testing process. By providing specific instructions about the functions to be tested, as well as the
+`Android` or `Kotlin` unit testing libraries permitted—such as `JUnit`, `Mockito`, or
+`Kotlin Coroutines Test`—we can guide the model to create precise, contextually relevant test cases.
+The `LLM` can handle various scenarios, including edge cases, success paths, and error conditions,
+ensuring robust test coverage.
 
 ## The Prompt I Used
 
@@ -377,7 +388,7 @@ class DataRepositoryTest {
 > [!NOTE]
 > GPT 4o is sufficient for performing this task.
 
-# Areas to Explore
+# Areas for Further Exploration
 
 Use LLM to convert more complex state diagrams (with hierarchies, such as the
 [StateCharts](https://www.state-machine.com/doc/Harel87.pdf)) into a more formalized state machine
