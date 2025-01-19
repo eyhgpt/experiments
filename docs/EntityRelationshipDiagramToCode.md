@@ -380,7 +380,7 @@ erDiagram
 A screenshot of the Mermaid Entity Relationship Diagram above is provided in case it cannot be
 displayed properly in some browser:
 
-![er_diagram_nia](diagrams/er_diagram_nia.png)
+![er_diagram_nia](../diagrams/er_diagram_nia.png)
 
 # Generate Android Kotlin Code from Mermaid ER Diagram
 

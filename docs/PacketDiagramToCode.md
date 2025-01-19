@@ -63,7 +63,7 @@ title UDP Packet
 A screenshot of the Mermaid Packet Diagram above is provided in case it cannot be displayed
 properly in some browser:
 
-![packet_diagram](diagrams/packet_diagram.png)
+![packet_diagram](../diagrams/packet_diagram.png)
 
 > [!NOTE]
 > This packet diagram is from https://mermaid.js.org/syntax/packet.html

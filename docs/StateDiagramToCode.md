@@ -70,7 +70,7 @@ stateDiagram-v2
 A screenshot of the Mermaid State Diagram above is provided in case it cannot be displayed
 properly in some browser:
 
-![state_diagram](diagrams/state_diagram.png)
+![state_diagram](../diagrams/state_diagram.png)
 
 I created this `Mermaid state diagram` to model a repository's behavior for demonstration
 purposes, illustrating the flow of data handling and transitions between states. It captures key

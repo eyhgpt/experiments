@@ -221,7 +221,7 @@ mindmap
 
 A screenshot of the Mermaid Mindmap above is provided in case it cannot be displayed
 properly in some browser
-![Generated Mindmap](diagrams/mindmap.png)
+![Generated Mindmap](../diagrams/mindmap.png)
 
 # Areas for Further Exploration
 

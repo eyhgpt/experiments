@@ -4,9 +4,9 @@ intriguing.
 
 # State Diagram To Code
 
-[State Diagram To Code](StateDiagramToCode.md)
-
 ![state_diagram](diagrams/state_diagram.png)
+
+[State Diagram To Code](docs/StateDiagramToCode.md)
 
 This article demonstrates how to model complex logic with Mermaid state diagrams and use LLMs to
 generate Kotlin code and unit tests based on the diagrams, incorporating best practices such as
@@ -16,7 +16,7 @@ coroutines, dependency injection, and error handling in Android development.
 
 ![packet_diagram](diagrams/packet_diagram.png)
 
-[Packet Diagram To Code](PacketDiagramToCode.md)
+[Packet Diagram To Code](docs/PacketDiagramToCode.md)
 
 This article demonstrates how to model network communication with Mermaid packet diagrams and use
 LLMs to generate Kotlin code and JUnit tests for UDP packet structures, including checksum
@@ -26,7 +26,7 @@ calculation.
 
 ![er_diagram_nia](diagrams/er_diagram_nia.png)
 
-[Code to Entity Relationship Diagram, Entity Relationship Diagram To Code](EntityRelationshipDiagramToCode.md)
+[Code to Entity Relationship Diagram, Entity Relationship Diagram To Code](docs/EntityRelationshipDiagramToCode.md)
 
 This article demonstrates how to model complex data relationships by converting Kotlin code into
 Mermaid ER diagrams and generating Kotlin code from Mermaid ER diagrams using LLMs, showcasing a
@@ -36,7 +36,7 @@ bidirectional workflow between code and visual documentation.
 
 ![Generated Mindmap](diagrams/mindmap.png)
 
-[Code To Mindmap](CodeToMindmap.md)
+[Code To Mindmap](docs/CodeToMindmap.md)
 
 This article explores how to use LLMs to generate Mermaid mindmaps from source code, such as the
 complex `SyncWorker` in the Now in Android app, to visualize relationships, dependencies, and
@@ -44,7 +44,7 @@ features for improved understanding and documentation.
 
 # Use Unit Tests To Consolidate Knowledge
 
-[Use Unit Tests To Consolidate Knowledge](UseUnitTestsToConsolidateKnowledge.md)
+[Use Unit Tests To Consolidate Knowledge](docs/UseUnitTestsToConsolidateKnowledge.md)
 
 This article explores how writing unit tests can deepen understanding of Kotlin features like null
 safety and experimental contracts, providing practical examples, insights into edge cases, and
