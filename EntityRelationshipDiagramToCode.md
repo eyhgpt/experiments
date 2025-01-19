@@ -798,5 +798,8 @@ With that, Room will correctly convert between `Instant` and the `Long` timestam
 This setup should closely match the diagram’s schema while working smoothly with the Room
 persistence library.
 
-# Summary and Areas for Further Exploration
+# Areas for Further Exploration
 
+Future work can explore enhancing this pipeline by incorporating automated database schema
+migrations, validating diagram-code consistency, and integrating interactive tools for real-time
+updates between diagrams and code.
