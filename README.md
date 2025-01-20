@@ -4,6 +4,8 @@ This repository showcases my explorations and findings on various topics, includ
 development using AI, featuring experiments, techniques, and insights that I find useful and
 intriguing.
 
+---
+
 # Architectural Dependency Diagram to Code
 
 ![flowchart_dependencies](diagrams/flowchart_dependencies.png)
@@ -15,6 +17,8 @@ architectures. The `Architectural Dependency Diagrams` visually represent the de
 an Android app's architectural classes, serving as a foundation for generating Kotlin source code
 with `LLMs` while promoting modularity, separation of concerns, and scalability.
 
+---
+
 # State Diagram To Code
 
 ![state_diagram](diagrams/state_diagram.png)
@@ -24,6 +28,8 @@ with `LLMs` while promoting modularity, separation of concerns, and scalability.
 This article demonstrates how to model complex logic with Mermaid state diagrams and use LLMs to
 generate Kotlin code and unit tests based on the diagrams, incorporating best practices such as
 coroutines, dependency injection, and error handling in Android development.
+
+---
 
 # Packet Diagram To Code
 
@@ -35,6 +41,8 @@ This article demonstrates how to model network communication with Mermaid packet
 LLMs to generate Kotlin code and JUnit tests for UDP packet structures, including checksum
 calculation.
 
+---
+
 # Code to Entity Relationship Diagram, Entity Relationship Diagram To Code
 
 ![er_diagram_nia](diagrams/er_diagram_nia.png)
@@ -45,6 +53,8 @@ This article demonstrates how to model complex data relationships by converting 
 Mermaid ER diagrams and generating Kotlin code from Mermaid ER diagrams using LLMs, showcasing a
 bidirectional workflow between code and visual documentation.
 
+---
+
 # Code To Mindmap
 
 ![Generated Mindmap](diagrams/mindmap.png)
@@ -54,6 +64,8 @@ bidirectional workflow between code and visual documentation.
 This article explores how to use LLMs to generate Mermaid mindmaps from source code, such as the
 complex `SyncWorker` in the Now in Android app, to visualize relationships, dependencies, and
 features for improved understanding and documentation.
+
+---
 
 # Use Unit Tests To Consolidate Knowledge
 
