@@ -1,6 +1,19 @@
+# Introduction
+
 This repository showcases my explorations and findings on various topics, including Android app
 development using AI, featuring experiments, techniques, and insights that I find useful and
 intriguing.
+
+# Architectural Dependency Diagram to Code
+
+![flowchart_dependencies](diagrams/flowchart_dependencies.png)
+
+[Architectural Dependency Diagram To Code](docs/ArchitecturalDependencyDiagramToCode.md)
+
+This document explores the use of `Mermaid flowcharts` and `LLM` to design and implement Android app
+architectures. The `Architectural Dependency Diagrams` visually represent the dependencies between
+an Android app's architectural classes, serving as a foundation for generating Kotlin source code
+with `LLMs` while promoting modularity, separation of concerns, and scalability.
 
 # State Diagram To Code
 
