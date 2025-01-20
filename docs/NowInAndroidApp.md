@@ -38,7 +38,7 @@ hierarchy are injected.
 
 The following diagrams, generated through prompt engineering and then manually edited, illustrate
 which specific classes are injected for the `prod` and `demo` build flavors, as well as for unit
-tests, highlighting the versatility of the `DI` setup.
+tests.
 
 ## Dependency Graph for the `prod` Build Flavor
 

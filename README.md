@@ -16,7 +16,7 @@ made some small contributions to its development.
 
 ---
 
-## Architectural Dependency Diagram to Code
+## From Architectural Dependency Diagram to Code
 
 ![flowchart_dependencies](diagrams/flowchart_dependencies.png)
 
@@ -28,7 +28,7 @@ promoting modularity, separation of concerns, and scalability.
 
 ---
 
-## State Diagram To Code
+## From State Diagram to Code
 
 ![state_diagram](diagrams/state_diagram.png)
 
@@ -39,7 +39,7 @@ development.
 
 ---
 
-## Packet Diagram To Code
+## From Packet Diagram to Code
 
 ![packet_diagram](diagrams/packet_diagram.png)
 
@@ -49,7 +49,7 @@ structures, including checksum calculation.
 
 ---
 
-## Code to Entity Relationship Diagram, Entity Relationship Diagram To Code
+## From Code to Entity Relationship Diagram, From Entity Relationship Diagram to Code
 
 ![er_diagram_nia](diagrams/er_diagram_nia.png)
 
@@ -60,7 +60,7 @@ documentation.
 
 ---
 
-## Code To Mindmap
+## From Code to Mindmap
 
 ![Generated Mindmap](diagrams/mindmap.png)
 
@@ -70,7 +70,7 @@ dependencies, and features for improved understanding and documentation.
 
 ---
 
-## Use Unit Tests To Consolidate Knowledge
+## Use Unit Tests to Consolidate Knowledge
 
 [This article](docs/UseUnitTestsToConsolidateKnowledge.md) explores how writing unit tests can
 deepen understanding of Kotlin features like null safety and experimental contracts, providing
