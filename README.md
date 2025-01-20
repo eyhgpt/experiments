@@ -6,6 +6,19 @@ intriguing.
 
 ---
 
+# Google's `Now in Android` Demo App Project
+
+The [Now in Android](https://github.com/android/nowinandroid) project is an open-source Android
+application designed to demonstrate best practices in modern Android development. It provides a
+comprehensive example of modularization strategies and Gradle composite builds, along with
+implementing the latest libraries and tools such as Jetpack Compose for building user interfaces,
+dependency injection with Hilt, and asynchronous programming using Kotlin Coroutines and Flow.
+
+I have been following and studying this demo project closely and have made some small
+contributions to its development.
+
+[Now in Android](docs/NowInAndroidApp.md)
+
 # Architectural Dependency Diagram to Code
 
 ![flowchart_dependencies](diagrams/flowchart_dependencies.png)
