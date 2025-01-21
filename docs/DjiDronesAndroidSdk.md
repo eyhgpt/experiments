@@ -15,7 +15,7 @@ latest best practices.
 ## Questionable Use of ViewModel for Global Purposes
 
 > [!NOTE]
-> I didn't intend to begin this notes with a critique. This project demonstrates impressively
+> I didn't intend to begin these notes with a critique. This project demonstrates impressively
 > sophisticated UI architecture, which will take more time to write about accurately.
 
 In this project, the use of `ViewModel` raises some questions regarding its adherence to Android
