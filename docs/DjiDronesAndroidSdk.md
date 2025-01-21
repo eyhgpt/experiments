@@ -16,7 +16,7 @@ latest best practices.
 
 > [!NOTE]
 > I didn't intend to begin this notes with a critique. This project demonstrates impressively
-> sophisticated UI architecture, which I plan to discuss in detail later.
+> sophisticated UI architecture, which will take more time to write about accurately.
 
 In this project, the use of `ViewModel` raises some questions regarding its adherence to Android
 architectural best practices. Specifically, `ViewModel` appears to be used for global purposes
