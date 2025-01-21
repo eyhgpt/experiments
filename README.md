@@ -16,6 +16,16 @@ made some small contributions to its development.
 
 ---
 
+## DJI's `Mobile-SDK-Android-V5` Demo App Project
+
+DJI (the drone company)'s `Mobile-SDK-Android-V5` project serves as an excellent example of
+utilizing the DJI Mobile SDK for advanced scientific and industrial applications, as well as for
+building sophisticated user interfaces for Android apps.
+
+[My Notes on Mobile-SDK-Android-V5](docs/DjiDronesAndroidSdk.md)
+
+---
+
 ## From Architectural Dependency Diagram to Code
 
 ![flowchart_dependencies](diagrams/flowchart_dependencies.png)
