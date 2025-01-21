@@ -4,11 +4,11 @@
 utilizing the DJI Mobile SDK to control DJI drones for complex scientific and industrial tasks, as
 well as for developing sophisticated user interfaces for Android apps.
 
-![dji_fly_planning](/diagrams/dji_fly_planning.png)
-![dji_fly_planning](/diagrams/dji_fly_recording.png)
-(The screenshots above are sourced from
+![dji_fly_planning](/diagrams/dji_fly_video_recording.png)
+![dji_fly_planning](/diagrams/dji_fly_route_planning.png)
+*Sourced from
 [support.dji.com](https://support.dji.com/help/content?customId=en-us03400007343&lang=en&re=AU&spaceId=34)
-and is copyrighted by DJI.)
+© DJI*
 
 > [!NOTE]
 > The screenshots above are from the DJI Fly app, which is also built on top of the same Mobile-SDK.
@@ -19,7 +19,7 @@ choices, the project utilizes `ViewModel`, `rxJava`, `LiveData`, and `Views`, wh
 incorporating dependency injection (DI), coroutines, or `Jetpack Compose`.
 
 ![dji_msdk_v5_architecture](/diagrams/dji_msdk_v5_architecture.png)
-(The image above is sourced from https://developer.dji.com/mobile-sdk/ and is copyrighted by DJI.)
+*Sourced from https://developer.dji.com/mobile-sdk/ © DJI*
 
 This article aims to highlight the strengths of this sample application and suggest areas for
 improvement, based on my personal perspective. However, I acknowledge that the rapid evolution of

@@ -12,6 +12,9 @@ The `Now in Android` project is an open-source Android application designed to d
 practices in modern Android development. I have been following this demo project closely and have
 made some small contributions to its development.
 
+![screenshots](https://github.com/android/nowinandroid/blob/main/docs/images/screenshots.png)
+*Image © Google*
+
 [My Notes on Now in Android](docs/NowInAndroidApp.md)
 
 ---
@@ -21,6 +24,9 @@ made some small contributions to its development.
 DJI (the drone company)'s `Mobile-SDK-Android-V5` project serves as an excellent example of
 utilizing the DJI Mobile SDK for advanced scientific and industrial applications, as well as for
 building sophisticated user interfaces for Android apps.
+
+![dji_fly_planning](/diagrams/dji_fly_video_recording.png)
+*Image © DJI*
 
 [My Notes on Mobile-SDK-Android-V5](docs/DjiDronesAndroidSdk.md)
 
