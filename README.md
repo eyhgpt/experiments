@@ -36,7 +36,7 @@ building sophisticated user interfaces for Android apps.
 
 ![flowchart_dependencies](diagrams/flowchart_dependencies.png)
 
-[This document](docs/ArchitecturalDependencyDiagramToCode.md) explores the use of `Mermaid 
+[This article](docs/ArchitecturalDependencyDiagramToCode.md) explores the use of `Mermaid 
 flowcharts` and `LLM` to design and implement Android app architectures. The
 `Architectural Dependency Diagrams` visually represent the dependencies between an Android app's
 architectural classes, serving as a foundation for generating Kotlin source code with `LLMs` while

@@ -13,9 +13,9 @@ The testing process can be illustrated using a `Mermaid flowchart` as shown belo
 
 ```mermaid
 flowchart LR
-   A[Generate a 120fps video using ChatGPT] -->|Load into| B[Play the video on the testing phone]
-   C[Use another device to record playback at 240fps] -->|Record| B
-   C -->|Replay| D[Replay the slow-motion recording and check if any frames were dropped]
+   A[Generate a 120fps video using ChatGPT] -->|load into| B[Play the video on the testing phone]
+   C[Use another device to record playback at 240fps] -->|record| B
+   C -->|replay| D[Replay the slow-motion recording and check if any frames were dropped]
 ```
 
 ## The Prompt I Used

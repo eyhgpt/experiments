@@ -26,6 +26,8 @@ improvement, based on my personal perspective. However, I acknowledge that the r
 Android app architecture can make it challenging to refactor existing codebases to align with the
 latest best practices.
 
+# `android-sdk-v5-sample` Project
+
 ## Questionable Use of ViewModel for Global Purposes
 
 > [!NOTE]
@@ -173,4 +175,6 @@ A structure more aligned with Android’s guidelines could look like this:
 This approach separates the concerns of ensuring the SDK is initialized (an application-level
 responsibility) from managing UI or user-facing states around the SDK (a ViewModel
 responsibility).
+
+# `android-sdk-v5-uxsdk` Project
 
