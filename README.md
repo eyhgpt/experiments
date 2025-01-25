@@ -30,6 +30,13 @@ building sophisticated user interfaces for Android apps.
 
 [My Notes on Mobile-SDK-Android-V5](docs/DjiDronesAndroidSdk.md)
 
+### Questionable Use of ViewModel for Global Purposes
+
+[This article](docs/DjiSdkViewModelForGlobalPurposes.md) examines the misuse of `ViewModel` in the
+DJI Android SDK sample project, focusing on its improper scoping to the `Application` class and
+direct `Context` dependency. It highlights architectural concerns and provides refactoring
+strategies to align with Android’s lifecycle-aware design principles.
+
 ### Design Analysis: How `WidgetModels` Update and Consume `UXKeys`
 
 ```mermaid
