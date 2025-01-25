@@ -30,7 +30,50 @@ building sophisticated user interfaces for Android apps.
 
 [My Notes on Mobile-SDK-Android-V5](docs/DjiDronesAndroidSdk.md)
 
----
+[My Notes on Mobile-SDK-Android-V5](docs/DjiUxSdkWidgetModelAndUXKey.md)
+
+```mermaid
+classDiagram
+    class UXKeys
+    class CameraKeys
+    class GlobalPreferenceKeys
+    class MessagingKeys
+    class UXKey
+    class WidgetModel
+    class TakeOffWidgetModel
+    class UnitModeListItemWidgetModel
+    class GlobalPreferencesInterface {
+        <<interface>>
+    }
+    class DefaultGlobalPreferences
+    class DataProcessor
+    class ObservableKeyedStore {
+        <<interface>>
+    }
+    class ObservableInMemoryKeyedStore
+    class FlatStore
+
+    ObservableKeyedStore <|-- ObservableInMemoryKeyedStore
+    FlatStore <-- ObservableInMemoryKeyedStore: reads and writes
+    UXKeys <|-- CameraKeys
+    UXKeys <|-- GlobalPreferenceKeys
+    UXKeys <|-- MessagingKeys
+    UXKeys --> UXKey: creates
+    UXKey <-- WidgetModel: reads
+    DataProcessor <-- WidgetModel: reads and writes
+    WidgetModel <|-- TakeOffWidgetModel
+    WidgetModel <|-- UnitModeListItemWidgetModel
+    ObservableInMemoryKeyedStore <-- TakeOffWidgetModel: reads
+    ObservableInMemoryKeyedStore <-- UnitModeListItemWidgetModel: reads and writes
+    TakeOffWidgetModel --> GlobalPreferencesInterface: reads
+    UnitModeListItemWidgetModel --> GlobalPreferencesInterface: reads and writes
+    ObservableInMemoryKeyedStore --> UXKeys: initializes
+    GlobalPreferencesInterface <|-- DefaultGlobalPreferences
+```
+
+The article explores how dual data sources (`SharedPreferences` for persistence and
+`ObservableInMemoryKeyedStore` for real-time synchronization) work together, and proposes a
+`UXDataSource` class to centralize data-source handling and reduce boilerplate.
 
 ## From Architectural Dependency Diagram to Code
 

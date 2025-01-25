@@ -20,7 +20,7 @@ The article explores:
 - How dual data sources (`SharedPreferences` for persistence + `ObservableInMemoryKeyedStore` for
   real-time sync) work together.
 - Why this architecture causes code duplication across WidgetModels.
-- A proposed `UXDataSource` class to centralize preference handling and reduce boilerplate.
+- A proposed `UXDataSource` class to centralize data-source handling and reduce boilerplate.
 
 ### Table of Contents
 
