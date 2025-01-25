@@ -22,16 +22,16 @@ The article explores:
 - Why this architecture causes code duplication across WidgetModels.
 - A proposed `UXDataSource` class to centralize preference handling and reduce boilerplate.
 
-# Table of Contents
+### Table of Contents
 
-[1. Introduction to `WidgetModels` and `UXKeys`](#1-introduction-to-widgetmodels-and-uxkeys)
-[2. Study Focus: The `UnitType` UXKey](#2-study-focus-the-unittype-uxkey)
-[3. Producer and Consumer Roles](#3-producer-and-consumer-roles)
-[4. Class Diagram Overview](#4-class-diagram-overview)
-[5. Dual Data Sources: Roles and Necessity](#5-dual-data-sources-roles-and-necessity)
-[6. Flowchart: Initialization and Runtime Observation](#6-flowchart-initialization-and-runtime-observation)
-[7. Sequence Diagram:`UnitType` Update to Imperial](#7-sequence-diagram-unittype-update-to-imperial)
-[8. Areas for Improvement in the Data Source Architecture](#8-areas-for-improvement-in-the-data-source-architecture)
+[1. Introduction to WidgetModels and UXKeys](#1-introduction-to-widgetmodels-and-uxkeys)  
+[2. Study Focus: The UnitType UXKey](#2-study-focus-the-unittype-uxkey)  
+[3. Producer and Consumer Roles](#3-producer-and-consumer-roles)  
+[4. Class Diagram Overview](#4-class-diagram-overview)  
+[5. Dual Data Sources: Roles and Necessity](#5-dual-data-sources-roles-and-necessity)    
+[6. Flowchart: Initialization and Runtime Observation](#6-flowchart-initialization-and-runtime-observation)     
+[7. Sequence Diagram:UnitType Update to Imperial](#7-sequence-diagram-unittype-update-to-imperial)  
+[8. Areas for Improvement in the Data Source Architecture](#8-areas-for-improvement-in-the-data-source-architecture)  
 [9. Proposed Architecture: Centralized UXDataSource<T>](#9-proposed-architecture-centralized-uxdatasourcet)
 
 # 1. Introduction to `WidgetModels` and `UXKeys`
