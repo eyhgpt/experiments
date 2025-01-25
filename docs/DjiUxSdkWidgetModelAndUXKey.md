@@ -1,24 +1,58 @@
-# Design Analysis: How `WidgetModel`s Update and Consume `UXKey`s
+# Design Analysis: How `WidgetModels` Update and Consume `UXKeys`
 
-# 1. Introduction to `WidgetModel`s and `UXKey`s
+This article examines how the `DJI Android SDK v5 UXSDK` manages user preferences like unit
+conversions (metric/imperial) using two core components:
 
-## What are `WidgetModel`s?
+1. WidgetModels: Business logic controllers (e.g., `TakeOffWidgetModel`, `AltitudeWidgetModel`) that
+   convert raw sensor data into UI-ready values.
+2. UXKeys: Shared configuration parameters (e.g., `UNIT_TYPE`) stored in a reactive key-value
+   store (`ObservableInMemoryKeyedStore`) and persisted via `SharedPreferences`.
 
-`WidgetModel`s are core components in the `android-sdk-v5-uxsdk` project that act as intermediaries
+We analyze a real-world implementation where:
+
+- 1 producer (`UnitModeListItemWidgetModel`) updates the `UNIT_TYPE` key when the user changes unit
+  preferences.
+- 15+ consumer WidgetModels (e.g., altitude, distance, speed displays) reactively adapt their
+  calculations to the current unit system.
+
+The article explores:
+
+- How dual data sources (`SharedPreferences` for persistence + `ObservableInMemoryKeyedStore` for
+  real-time sync) work together.
+- Why this architecture causes code duplication across WidgetModels.
+- A proposed `UXDataSource` class to centralize preference handling and reduce boilerplate.
+
+# Table of Contents
+
+[1. Introduction to `WidgetModels` and `UXKeys`](#1-introduction-to-widgetmodels-and-uxkeys)
+[2. Study Focus: The `UnitType` UXKey](#2-study-focus-the-unittype-uxkey)
+[3. Producer and Consumer Roles](#3-producer-and-consumer-roles)
+[4. Class Diagram Overview](#4-class-diagram-overview)
+[5. Dual Data Sources: Roles and Necessity](#5-dual-data-sources-roles-and-necessity)
+[6. Flowchart: Initialization and Runtime Observation](#6-flowchart-initialization-and-runtime-observation)
+[7. Sequence Diagram:`UnitType` Update to Imperial](#7-sequence-diagram-unittype-update-to-imperial)
+[8. Areas for Improvement in the Data Source Architecture](#8-areas-for-improvement-in-the-data-source-architecture)
+[9. Proposed Architecture: Centralized UXDataSource<T>](#9-proposed-architecture-centralized-uxdatasourcet)
+
+# 1. Introduction to `WidgetModels` and `UXKeys`
+
+## What are `WidgetModels`?
+
+`WidgetModels` are core components in the `android-sdk-v5-uxsdk` project that act as intermediaries
 between the UI (widgets) and the data layer. They:
 
 - Encapsulate business logic (e.g., unit conversions, state management).
 - Observe data sources (e.g., hardware sensors, user preferences).
 - Expose reactive streams (via `DataProcessor`s) to drive UI updates.
-- Bind to `UXKey`s to communicate with a centralized key-value store (
+- Bind to `UXKeys` to communicate with a centralized key-value store (
   `ObservableInMemoryKeyedStore`).
 
 Example: `TakeOffWidgetModel` manages altitude calculations and binds to the `UNIT_TYPE` key to
 handle metric/imperial conversions.
 
-## What are `UXKey`s?
+## What are `UXKeys`?
 
-`UXKey`s are parameterized keys that define:
+`UXKeys` are parameterized keys that define:
 
 - A unique identifier (e.g., `"UnitType"`).
 - The data type of the value they hold (e.g., `UnitConversionUtil.UnitType`).
@@ -28,7 +62,7 @@ handle metric/imperial conversions.
 They serve as a standardized way to:
 
 - Store values in a global in-memory store (`FlatStore`).
-- Propagate changes reactively to subscribed `WidgetModel`s.
+- Propagate changes reactively to subscribed `WidgetModels`.
 - Persist values via integration with `GlobalPreferencesInterface` (e.g., SharedPreferences).
 
 # 2. Study Focus: The `UnitType` UXKey
@@ -37,7 +71,7 @@ This analysis focuses on how the `UNIT_TYPE` `UXKey` (representing the user’s 
 is:
 
 1. Updated by a single `WidgetModel` (`UnitModeListItemWidgetModel`).
-2. Consumed by 15+ `WidgetModel`s across the app (e.g., altitude, distance, velocity displays).
+2. Consumed by 15+ `WidgetModels` across the app (e.g., altitude, distance, velocity displays).
 
 This pattern ensures centralized control over unit preferences while enabling decoupled consumption
 across diverse UI components.
@@ -54,9 +88,9 @@ across diverse UI components.
     - Only this `WidgetModel` modifies `UNIT_TYPE`, ensuring a single source of truth for unit
       preferences.
 
-## Consumer `WidgetModel`s
+## Consumer `WidgetModels`
 
-These `WidgetModel`s read the `UNIT_TYPE` key to adapt their logic but never modify it:
+These `WidgetModels` read the `UNIT_TYPE` key to adapt their logic but never modify it:
 
 - `TakeOffWidgetModel`
 - `ReturnHomeWidgetModel`
@@ -149,7 +183,7 @@ classDiagram
     - Uses reactive streams (e.g., RxJava `Flowable`) to notify consumers of changes instantly.
 - Use Case:
     - When `UnitModeListItemWidgetModel` updates `UNIT_TYPE`, the store propagates the new value to
-      all bound `WidgetModel`s (e.g., `TakeOffWidgetModel`), triggering UI refreshes.
+      all bound `WidgetModels` (e.g., `TakeOffWidgetModel`), triggering UI refreshes.
 - Lifetime:
     - Values exist only in memory and are cleared when the app terminates.
 
@@ -280,7 +314,7 @@ sequenceDiagram
 
 The sequence diagram above illustrates the end-to-end flow when a user updates the `UnitType` to
 `IMPERIAL` and the downstream operations triggered across the system. Here, the `Consumer
-WidgetModel` refers to any of the 15+ `WidgetModel`s (e.g., `TakeOffWidgetModel`,
+WidgetModel` refers to any of the 15+ `WidgetModels` (e.g., `TakeOffWidgetModel`,
 `AltitudeWidgetModel`) that consume the `UnitType` value but do not modify it. Each
 `Consumer WidgetModel` is paired with a `Consumer Widget` (e.g., `TakeOffWidget`,
 `AltitudeWidget`), which is the Android UI component responsible for displaying some unit-specific
@@ -303,16 +337,78 @@ data.
     - The `DataProcessor` triggers `updateStates()`, recalculating unit-dependent values (e.g.,
       converting meters to feet).
 5. UI Refresh:
-    - Push Mechanism: The `Consumer Widget`  (e.g., `TODO Widget`) reacts to a reactive stream (
-      `Flowable`) and redraws.
+    - Push Mechanism: The `Consumer Widget` reacts to a reactive stream (`Flowable`) and redraws.
     - Pull Mechanism: The `Consumer Widget` (e.g., `TakeOffWidget`) explicitly fetches the latest
-      `UnitType` during rendering (e.g., `onResume`).
+      `UnitType`.
 
 ## This architecture ensures:
 
 - Persistence: `UnitType` survives app restarts via `SharedPreferences`.
 - Realtime Sync: Changes propagate instantly to all consumers via reactive streams.
 
+# 8. Areas for Improvement in the Data Source Architecture
 
+One noticeable issue in the data source architecture is that the `Unit Type` property is retrieved
+in each of the 16 `WidgetModels` from two sources:
 
+1. The `GlobalPreferencesInterface` (for persisted settings, via `DefaultGlobalPreferences`), and
+2. The `ObservableInMemoryKeyedStore` (for reactive, real-time updates through `UXKey`).
+
+Specifically, each `WidgetModel` does the following:
+
+- Reads the current `Unit Type` from the `GlobalPreferencesInterface` (the shared preferences
+  setup).
+- Binds the same `GlobalPreferenceKeys.UNIT_TYPE` key to the same
+  `DataProcessor<UnitConversionUtil.UnitType>` field created in each `WidgetModel`.
+
+This leads to a few drawbacks:
+
+1. Code Duplication: Each widget model has boilerplate code that fetches and binds the same
+   value from the two different sources.
+2. Maintenance Overhead: Having to manage both persisted and real-time data in every widget
+   model makes the codebase harder to maintain and scale. Any changes to how unit type is read or
+   updated need to be reflected in multiple places.
+3. Single Source of Truth Violation: Ideally, each piece of data in the system should come from
+   a single, clearly defined source. In this setup, the same data is effectively owned by both the
+   preferences manager and the in-memory keyed store.
+
+# 9. Proposed Architecture: Centralized `UXDataSource<T>`
+
+To streamline the management of `UnitType` (and similar preferences), a `UXDataSource<T>` class
+can be introduced to encapsulate interactions with both data sources (`GlobalPreferencesInterface`
+and `ObservableInMemoryKeyedStore`). The class operates as follows:
+
+### Key Features
+
+- For `UnitType`: Instantiate as `UXDataSource<UnitType>` to handle reads/writes for the `UNIT_TYPE`
+  key.
+
+- Dependency Injection: Inject `UXDataSource<UnitType>` into all `Producer WidgetModels` and
+  `Consumer WidgetModels`.
+    - Simplification: `GlobalPreferencesInterface` and `ObservableInMemoryKeyedStore` no longer need
+      direct injection into `WidgetModels`.
+
+- Producer Workflow: `Producer WidgetModels` (e.g., `UnitModeListItemWidgetModel`) call
+  `setUnitType(unitType: UnitType, persist: Boolean = true)` to update the value.
+    - Persistent Updates (`persist = true`): Writes to both `GlobalPreferencesInterface` (
+      SharedPreferences) and `ObservableInMemoryKeyedStore` (e.g., user-selected units).
+    - Ephemeral Updates (`persist = false`): Writes only to `ObservableInMemoryKeyedStore` (
+      e.g., temporary debug overrides).
+
+- Consumer Workflow: The `UXDataSource<UnitType>` creates and exposes a
+  `val unitTypeProcessor: DataProcessor<UnitType>`, allowing `Consumer WidgetModels` (e.g.,
+  `TakeOffWidgetModel`) to subscribe to the `Flowable<UnitType>` for push-based updates or access
+  the current value via the `DataProcessor.getValue()` method.
+
+### Benefits
+
+- Reduced Redundancy: Eliminates duplicate code in `WidgetModels` for dual-source synchronization.
+- Centralized Logic: Encapsulates persistence rules (e.g., when to write to SharedPreferences vs.
+  in-memory storage).
+- Improved Maintainability: Changes to data sources (e.g., replacing `SharedPreferences` with
+  `Room DB`) only affect `UXDataSource`.
+- Explicit Control: Decouples `WidgetModels` from storage implementation details, adhering to the
+  Single Responsibility Principle.
+- Flexibility: Supports both persistent and ephemeral updates through method parameters (e.g.,
+  `persist: Boolean`).
 
