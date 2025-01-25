@@ -30,7 +30,7 @@ building sophisticated user interfaces for Android apps.
 
 [My Notes on Mobile-SDK-Android-V5](docs/DjiDronesAndroidSdk.md)
 
-[My Notes on Mobile-SDK-Android-V5](docs/DjiUxSdkWidgetModelAndUXKey.md)
+### Design Analysis: How `WidgetModels` Update and Consume `UXKeys`
 
 ```mermaid
 classDiagram
@@ -71,9 +71,12 @@ classDiagram
     GlobalPreferencesInterface <|-- DefaultGlobalPreferences
 ```
 
-The article explores how dual data sources (`SharedPreferences` for persistence and
-`ObservableInMemoryKeyedStore` for real-time synchronization) work together, and proposes a
-`UXDataSource` class to centralize data-source handling and reduce boilerplate.
+[This article](docs/DjiUxSdkWidgetModelAndUXKey.md) explores how dual data sources (
+`SharedPreferences` for persistence and `ObservableInMemoryKeyedStore` for real-time
+synchronization) work together, and proposes a `UXDataSource` class to centralize data-source
+handling and reduce boilerplate.
+
+---
 
 ## From Architectural Dependency Diagram to Code
 
