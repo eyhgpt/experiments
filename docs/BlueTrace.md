@@ -1,3 +1,17 @@
+In response to the COVID-19 pandemic, Singapore’s Government Technology Agency developed BlueTrace,
+a Bluetooth-based contact tracing protocol designed to enhance public health efforts while
+preserving user privacy. BlueTrace enables mobile devices to log encounters with nearby users,
+helping health authorities track and contain virus transmission.
+
+The BlueTrace protocol and its reference implementation, OpenTrace, have been made open-source to
+encourage global adoption and interoperability in digital contact tracing efforts.
+
+- The BlueTrace protocol, including its technical specifications and design principles, can be found
+  in the official white paper at [bluetrace.io](https://bluetrace.io).
+- The source code for OpenTrace, which includes the iOS and Android apps, a cloud-based backend, and
+  baseline signal strength calibration data, is available on GitHub at
+  [github.com/opentrace-community](https://github.com/opentrace-community).
+
 ## Using TempIDs to Mitigate Replay Attacks and Prevent Third Parties from Tracking Users
 
 Bluetooth-based contact tracing systems, such as BlueTrace, use TempIDs to enhance privacy and
@@ -86,7 +100,9 @@ scalability challenges.
 ### Using AES-256-GCM to Encrypt TempIDs Containing the Static User ID
 
 <img src="blue_trace_2.png" width="300">
-*copied from [the BlueTrace white paper](https://bluetrace.io/static/bluetrace_whitepaper-938063656596c104632def383eb33b3c.pdf)*
+
+Copied from
+[the BlueTrace White Paper](https://bluetrace.io/static/bluetrace_whitepaper-938063656596c104632def383eb33b3c.pdf)
 
 Instead of generating random UUIDs as TempIDs, BlueTrace employs AES-256-GCM encryption to securely
 encode the static User ID within each generated TempID. This approach ensures that only the backend,
@@ -103,4 +119,3 @@ not only encrypts data but also provides an authentication tag (Auth Tag), which
 of data integrity, ensuring that any tampering with the TempID can be detected. This prevents
 attackers from modifying or forging TempIDs, maintaining the trustworthiness of encounter messages
 exchanged between devices.
-
