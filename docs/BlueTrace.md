@@ -99,7 +99,7 @@ scalability challenges.
 
 ### Using AES-256-GCM to Encrypt TempIDs Containing the Static User ID
 
-<img src="blue_trace_2.png" width="300">
+<img src="/diagrams/blue_trace_2.png" width="300">
 
 Copied from
 [the BlueTrace White Paper](https://bluetrace.io/static/bluetrace_whitepaper-938063656596c104632def383eb33b3c.pdf)
