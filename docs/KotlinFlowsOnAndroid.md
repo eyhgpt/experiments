@@ -162,7 +162,8 @@ firestore.collection("users")
 
 #### 8. Paging Library 3
 
-The Paging Library delivers paginated data as `Flow<PagingData>`, enabling efficient loading of large
+The Paging Library delivers paginated data as `Flow<PagingData>`, enabling efficient loading of
+large
 datasets from network or database sources.
 
 ```kotlin  
@@ -226,9 +227,9 @@ Here's how to create a flow that generates Fibonacci numbers:
 
 ```kotlin
 class FlowUT {
- /**
-  * https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/flow.html
-  */
+ /
+ * https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/flow.html
+ */
  private fun fibonacci(): Flow<BigInteger> = flow {
   // this: FlowCollector<BigInteger>
 
@@ -407,6 +408,53 @@ collected.
 This interleaved execution between producer and consumer is a key characteristic of flows in Kotlin
 coroutines, allowing for efficient processing of asynchronous data streams with backpressure
 management built in.
+
+##### Cold Flow Characteristics
+
+The fact that `fibonacciFlow` can be collected twice and produces the same values each time is a
+clear indication that it is a "cold" flow in Kotlin coroutines.
+
+In the code example, we can observe several key characteristics of cold flows:
+
+1. Execution per collector: Notice how the console output shows the messages like "Flow builder code
+   started executing" and "Variables initialized" appearing twice - once for each collection.
+   This happens because the flow block is executed independently for each collector.
+
+2. Same sequence from the beginning: Both collections receive the exact same Fibonacci sequence
+   starting from zero. Each collector triggers a fresh execution of the flow producer code.
+
+3. On-demand execution: The flow doesn't start producing values until `collect` is called. This
+   is evident from the output showing that nothing happens between flow definition and collection.
+
+4. Independent streams: Each collector gets its own completely independent stream of values. The
+   first collection completes fully before the second one begins, with each getting the complete
+   sequence.
+
+##### Contrast with Hot Flows
+
+If `fibonacciFlow` were a hot flow (like `SharedFlow` or `StateFlow`), its behavior would be
+significantly different:
+
+1. Single execution: A hot flow would execute its producer code only once, regardless of how many
+   collectors are attached.
+
+2. Shared emissions: Multiple collectors would share the same stream of values rather than each
+   getting their own stream.
+
+3. Missed values: If a collector starts late, it would miss values that were emitted before it
+   started collecting (unless configured with replay). In your example, the second collector
+   would likely miss the first few Fibonacci numbers.
+
+4. Active without collectors: A hot flow could be actively emitting values even if there are no
+   collectors present.
+
+To make your Fibonacci example behave like a hot flow, you would need to change the implementation
+to use something like `MutableSharedFlow` or `MutableStateFlow`, and you'd observe that the second
+collection would not restart the sequence from zero but would continue from wherever the flow
+currently was.
+
+In summary, the ability to collect the same sequence multiple times confirms that `fibonacciFlow` is
+indeed a cold flow, which is the default type created by the `flow {}` builder.
 
 #### Real-time Data Simulation Example
 
