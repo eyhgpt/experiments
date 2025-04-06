@@ -23,9 +23,9 @@ backpressure handling, and lifecycle awareness.
 #### 1. Room Database
 
 Room, part of Android Jetpack, provides an abstraction layer over SQLite and natively supports
-Kotlin Flow for reactive database queries. When a DAO (Data Access Object) returns a `Flow>`,
-Room automatically emits updated results whenever the underlying data changes, eliminating
-manual refresh logic.
+Kotlin Flow for reactive database queries. When a DAO (Data Access Object) returns a
+`Flow<List<T>>`, Room automatically emits updated results whenever the underlying data changes,
+eliminating manual refresh logic.
 
 ```kotlin  
 @Dao
@@ -49,11 +49,11 @@ transactional operations and automatic error handling.
 ##### Preferences DataStore:
 
 ```kotlin  
-val Context.dataStore: DataStore by preferencesDataStore(name = "settings")
-val theme_key = booleanPreferencesKey("dark_mode")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+val THEME_KEY = booleanPreferencesKey("dark_mode")
 
-val themeFlow: Flow = dataStore.data
- .map { preferences -> preferences[theme_key] ?: false }  
+val themeFlow: Flow<Boolean> = dataStore.data
+ .map { preferences -> preferences[THEME_KEY] ?: false }
 ```
 
 DataStore emits the latest preference values on collection and caches them to minimize disk I/O.
@@ -65,11 +65,11 @@ Proto DataStore uses Protocol Buffers to serialize custom objects, providing typ
 ```kotlin  
 data class UserPreferences(val lastLogin: Long)
 
-val userPreferencesFlow: Flow = dataStore.data
+val userPreferencesFlow: Flow<UserPreferences> = dataStore.data
  .catch { exception ->
   if (exception is IOException) emit(UserPreferences(0))
   else throw exception
- }  
+ }
 ```
 
 This is ideal for complex configurations requiring structured data.
@@ -107,7 +107,7 @@ button.clicks()
 
 viewPager2.pageSelections()
  .onEach { position -> updateTab(position) }
- .launchIn(viewLifecycleOwner.lifecycleScope)  
+ .launchIn(viewLifecycleOwner.lifecycleScope)
 ```
 
 This library simplifies event-driven logic while ensuring automatic lifecycle management.
@@ -118,13 +118,13 @@ WorkManager schedules background tasks and exposes work status via `Flow`. The `
 includes states like `ENQUEUED`, `RUNNING`, and `SUCCESS`, enabling reactive UI updates.
 
 ```kotlin  
-val workInfoFlow: Flow =
+val workInfoFlow: Flow<WorkInfo> =
  WorkManager.getInstance(context).getWorkInfoByIdFlow(workRequest.id)
 
 workInfoFlow
  .filter { it.state == WorkInfo.State.SUCCEEDED }
  .onEach { /* Update UI */ }
- .launchIn(viewModelScope)  
+ .launchIn(viewModelScope)
 ```
 
 #### 6. Jetpack ViewModel and StateFlow
@@ -135,15 +135,15 @@ Compose.
 
 ```kotlin  
 class UserViewModel : ViewModel() {
- private val _userState = MutableStateFlow(UserState.Loading)
- val userState: StateFlow = _userState.asStateFlow()
+ private val _userState = MutableStateFlow<UserState>(UserState.Loading)
+ val userState: StateFlow<UserState> = _userState.asStateFlow()
 
  fun loadUser() {
   viewModelScope.launch {
    _userState.value = UserState.Success(repository.fetchUser())
   }
  }
-}  
+}
 ```
 
 #### 7. Firebase Realtime Database and Firestore
@@ -157,12 +157,12 @@ firestore.collection("users")
  .snapshotFlow()
  .map { it.toObject(User::class.java) }
  .onEach { user -> /* Update UI */ }
- .launchIn(lifecycleScope)  
+ .launchIn(lifecycleScope)
 ```
 
 #### 8. Paging Library 3
 
-The Paging Library delivers paginated data as `Flow`, enabling efficient loading of large
+The Paging Library delivers paginated data as `Flow<PagingData>`, enabling efficient loading of large
 datasets from network or database sources.
 
 ```kotlin  
