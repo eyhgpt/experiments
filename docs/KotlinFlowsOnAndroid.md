@@ -225,45 +225,86 @@ the flow builder to send values downstream.
 Here's how to create a flow that generates Fibonacci numbers:
 
 ```kotlin
-//import java.math.BigInteger
-//import kotlinx.coroutines.flow.take
+class FlowUT {
+ /**
+  * https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/flow.html
+  */
+ private fun fibonacci(): Flow<BigInteger> = flow {
+  // this: FlowCollector<BigInteger>
 
-fun fibonacci(): Flow<BigInteger> = flow {
- println("LOG: Flow builder code started executing")
- var x = BigInteger.ZERO
- var y = BigInteger.ONE
+  println("3: Flow builder code started executing")
+  var x = BigInteger.ZERO
+  var y = BigInteger.ONE
 
- println("LOG: Variables initialized, starting loop")
- var count = 0
- while (true) {
-  println("LOG: About to emit value #${++count}: $x")
-  emit(x)
-  println("LOG: After emission of $x")
-  x = y.also {
-   y += x
+  println("4: Variables initialized, starting loop")
+  var count = 0
+
+  while (true) {
+   println("5: About to emit value #${++count}: $x")
+
+   // FlowCollector<T>'s public suspend fun emit(value: T)
+   emit(x)
+
+   println("7: After emission of $x")
+
+   x = y.also { y += x }
   }
  }
-}
 
-// Usage
-suspend fun main() {
- println("LOG: Program started")
- val fibonacciFlow = fibonacci().take(10)
- println("LOG: Flow defined but not yet collected")
+ @Test
+ fun flow_01_flow_builder_to_emit_fibonacci() = runBlocking {
+  println("1: Test started")
 
- fibonacciFlow.collect { number ->
-  println("LOG: Collected value: $number")
+  // fun <T> Flow<T>.take(count: Int): Flow<T>(source)
+  // Returns a flow that contains first count elements. When count elements are consumed, the
+  // original flow is cancelled. Throws IllegalArgumentException if count is not positive.
+  val fibonacciFlow: Flow<BigInteger> = fibonacci().take(10)
+
+  println("2.1: Flow defined but not yet collected")
+
+  // First collection
+  val firstCollectionValues = mutableListOf<BigInteger>()
+
+  fibonacciFlow.collectIndexed { index, number ->
+   println("6.1: First collection value: $number; index: $index")
+
+   firstCollectionValues.add(number)
+  }
+
+  println("8.1: First collection finished")
+
+  // Second collection to demonstrate cold flow behavior
+  println("2.2: Starting second collection")
+
+  val secondCollectionValues = mutableListOf<BigInteger>()
+
+  fibonacciFlow.collectIndexed { index, number ->
+   println("6.2: Second collection value: $number; index: $index")
+
+   secondCollectionValues.add(number)
+  }
+
+  println("8.2: Second collection finished")
+
+  // Verify both collections produce the same sequence (cold flow behavior)
+  assertEquals(firstCollectionValues, secondCollectionValues)
+
+  // Verify the actual Fibonacci sequence values
+  val expectedSequence = listOf(
+   BigInteger.ZERO,
+   BigInteger.ONE,
+   BigInteger.ONE,
+   BigInteger.valueOf(2),
+   BigInteger.valueOf(3),
+   BigInteger.valueOf(5),
+   BigInteger.valueOf(8),
+   BigInteger.valueOf(13),
+   BigInteger.valueOf(21),
+   BigInteger.valueOf(34)
+  )
+
+  assertEquals(expectedSequence, firstCollectionValues)
  }
-
- println("LOG: First collection finished")
-
- // Collecting again to demonstrate cold flow behavior
- println("LOG: Starting second collection")
- fibonacciFlow.collect { number ->
-  println("LOG: Second collection value: $number")
- }
-
- println("LOG: Program finished")
 }
 ```
 
@@ -277,48 +318,73 @@ collected.
 ##### The log sequence should look like this:
 
 ```
-LOG: Program started
-LOG: Flow defined but not yet collected
-LOG: Flow builder code started executing
-LOG: Variables initialized, starting loop
-LOG: About to emit value #1: 0
-LOG: Collected value: 0
-LOG: After emission of 0
-LOG: About to emit value #2: 1
-LOG: Collected value: 1
-LOG: After emission of 1
-LOG: About to emit value #3: 1
-LOG: Collected value: 1
-LOG: After emission of 1
-LOG: About to emit value #4: 2
-LOG: Collected value: 2
-LOG: After emission of 2
-LOG: About to emit value #5: 3
-LOG: Collected value: 3
-LOG: After emission of 3
-LOG: About to emit value #6: 5
-LOG: Collected value: 5
-LOG: After emission of 5
-LOG: About to emit value #7: 8
-LOG: Collected value: 8
-LOG: After emission of 8
-LOG: About to emit value #8: 13
-LOG: Collected value: 13
-LOG: After emission of 13
-LOG: About to emit value #9: 21
-LOG: Collected value: 21
-LOG: After emission of 21
-LOG: About to emit value #10: 34
-LOG: Collected value: 34
-LOG: After emission of 34
-LOG: First collection finished
-LOG: Starting second collection
-LOG: Flow builder code started executing
-LOG: Variables initialized, starting loop
-LOG: About to emit value #1: 0
-LOG: Second collection value: 0
-LOG: After emission of 0
-...
+1: Test started
+2.1: Flow defined but not yet collected
+3: Flow builder code started executing
+4: Variables initialized, starting loop
+5: About to emit value #1: 0
+6.1: First collection value: 0; index: 0
+7: After emission of 0
+5: About to emit value #2: 1
+6.1: First collection value: 1; index: 1
+7: After emission of 1
+5: About to emit value #3: 1
+6.1: First collection value: 1; index: 2
+7: After emission of 1
+5: About to emit value #4: 2
+6.1: First collection value: 2; index: 3
+7: After emission of 2
+5: About to emit value #5: 3
+6.1: First collection value: 3; index: 4
+7: After emission of 3
+5: About to emit value #6: 5
+6.1: First collection value: 5; index: 5
+7: After emission of 5
+5: About to emit value #7: 8
+6.1: First collection value: 8; index: 6
+7: After emission of 8
+5: About to emit value #8: 13
+6.1: First collection value: 13; index: 7
+7: After emission of 13
+5: About to emit value #9: 21
+6.1: First collection value: 21; index: 8
+7: After emission of 21
+5: About to emit value #10: 34
+6.1: First collection value: 34; index: 9
+8.1: First collection finished
+2.2: Starting second collection
+3: Flow builder code started executing
+4: Variables initialized, starting loop
+5: About to emit value #1: 0
+6.2: Second collection value: 0; index: 0
+7: After emission of 0
+5: About to emit value #2: 1
+6.2: Second collection value: 1; index: 1
+7: After emission of 1
+5: About to emit value #3: 1
+6.2: Second collection value: 1; index: 2
+7: After emission of 1
+5: About to emit value #4: 2
+6.2: Second collection value: 2; index: 3
+7: After emission of 2
+5: About to emit value #5: 3
+6.2: Second collection value: 3; index: 4
+7: After emission of 3
+5: About to emit value #6: 5
+6.2: Second collection value: 5; index: 5
+7: After emission of 5
+5: About to emit value #7: 8
+6.2: Second collection value: 8; index: 6
+7: After emission of 8
+5: About to emit value #8: 13
+6.2: Second collection value: 13; index: 7
+7: After emission of 13
+5: About to emit value #9: 21
+6.2: Second collection value: 21; index: 8
+7: After emission of 21
+5: About to emit value #10: 34
+6.2: Second collection value: 34; index: 9
+8.2: Second collection finished
 ```
 
 ##### Key Observations About Cold Flow Execution
