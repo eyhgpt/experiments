@@ -1,15 +1,24 @@
+> [!NOTE]
+> This document addresses questions related to Dynamic Feature Modules in Android app development.
+
+### Table of Contents
+
+- [Navigating from Base App to Dynamic Feature Module](#navigating-from-base-app-to-dynamic-feature-module)
+- [FeatureComponentHolder for Dynamic Feature Modules' Dependency Injection](#featurecomponentholder-for-dynamic-feature-modules-dependency-injection)
+
 # Navigating from Base App to Dynamic Feature Module
 
-> [!NOTE]
-> In my Android app, there are two modules:
->  - the base module `app`
->  - a dynamic feature module `df1`, which depends on the base module `app`
->
-> Module `app` has the MainActivity, which is launched when the app launches. On it, there's an
-> `Open DF1` button. On clicking this button, the Df1Activity defined in the `df1` module
-> should launch.
->
-> Given `df1` depends on `app`, how could `app` launch `df1`?
+```
+Question: In my Android app, there are two modules:
+ - the base module `app`
+ - a dynamic feature module `df1`, which depends on the base module `app`
+
+Module `app` has the MainActivity, which is launched when the app launches. On it, there's an
+`Open DF1` button. On clicking this button, the Df1Activity defined in the `df1` module
+should launch.
+
+Given `df1` depends on `app`, how could `app` launch `df1`?
+```
 
 To launch an activity from your dynamic feature module (`df1`) from the base module (`app`), you
 need to work with the inversed dependency relationship. Since the base module cannot have a
@@ -192,3 +201,112 @@ override fun attachBaseContext(base: Context) {
  SplitCompat.install(this)
 }
 ```
+
+# FeatureComponentHolder for Dynamic Feature Modules' Dependency Injection
+
+```
+/**
+ * Base interface that all feature component holders must implement.
+ * This interface enables the app module to manage feature module components
+ * without creating direct dependencies on feature module classes.
+ *
+ * The abstract interface pattern is used to decouple the app module from
+ * specific implementations in feature modules, preventing circular dependencies.
+ */
+interface FeatureComponentHolder {
+ /**
+  * Called when resources need to be released.
+  * Feature modules should implement this to clean up any resources
+  * when the component is being disposed or the feature is no longer needed.
+  */
+ fun releaseResources()
+}
+
+ /**
+  * Registry of active feature components.
+  * This map stores references to all active feature components by feature ID,
+  * allowing for efficient component reuse and lifecycle management.
+  *
+  * Using a map with string keys decouples the app module from specific feature module types,
+  * avoiding circular dependencies between modules.
+  */
+ private val featureComponents = mutableMapOf<String, FeatureComponentHolder>()
+
+ /**
+  * Gets an existing feature component or creates a new one if it doesn't exist.
+  * This method implements the Service Locator pattern for feature modules.
+  *
+  * @param featureId A unique identifier for the feature (typically the feature module name)
+  * @param factory A lambda that creates a new component instance if needed
+  * @return The existing or newly created component instance
+  *
+  * The method uses type parameters to ensure type safety while still allowing
+  * generic handling of different component types.
+  */
+ fun <T : FeatureComponentHolder> getOrCreateFeatureComponent(
+  featureId: String,
+  factory: () -> T
+ ): T {
+  @Suppress("UNCHECKED_CAST")
+  return featureComponents.getOrPut(featureId) { factory() } as T
+ }
+```
+
+The approach demonstrated in the code is a well-known and recommended pattern in Android
+development for managing dynamic feature modules. This pattern combines several established software
+design principles:
+
+### 1. Service Locator Pattern
+
+- The `featureComponents` map acts as a service registry
+- Components are accessed via unique keys (`featureId`) rather than concrete types
+- Decouples service consumers from service implementations
+- Particularly useful for dynamic features that may not always be installed
+
+### 2. Dependency Inversion Principle
+
+- `FeatureComponentHolder` interface serves as an abstraction layer
+- App module depends on abstractions (interface) rather than concrete implementations
+- Feature modules provide concrete implementations of the interface
+
+### 3. Component Holder Pattern
+
+- Generic type parameter `<T : FeatureComponentHolder>` ensures type safety
+- `getOrCreateFeatureComponent` manages component lifecycle
+- Centralized component management in the base `app` module
+
+### 4. Modularization Best Practices
+
+- Strict visibility control between modules
+- Clear component ownership boundaries
+- Support for dynamic delivery (Play Feature Delivery)
+- Build-time optimization through proper scoping
+
+### Key Benefits:
+
+1. Circular Dependency Prevention
+    - Base app module contains only interfaces
+    - Feature modules implement these interfaces
+    - No compile-time dependencies between app ↔ feature modules
+
+2. Lifecycle Management
+    - `releaseResources()` enables clean resource disposal
+    - Prevents memory leaks when features are uninstalled
+
+3. Testability
+    - Easy mocking through interface implementations
+    - Independent testing of feature modules
+
+4. Dynamic Feature Support
+    - Components are loaded only when needed
+    - Compatible with on-demand module installation
+
+This pattern is officially recommended by Android documentation and aligns with Google's
+modularization guidance for large apps.
+
+- https://developer.android.com/topic/modularization/patterns
+- https://developer.android.com/guide/navigation/integrations/feature-modules
+
+Major apps like Google Play Store and YouTube use
+[similar approaches](https://www.infoq.com/news/2022/11/android-modularization-guide/)
+to manage their dynamic features.
